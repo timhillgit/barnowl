@@ -784,6 +784,11 @@ void owl_cmd_add_defaults(owl_cmddict *cd)
               "with-history <cmd>",
               ""),
 
+  OWLCMD_VOID("clean-history", owl_command_clean_history, OWL_CTX_ANY,
+              "Remove all commands from the history",
+              "clean-history",
+              ""),
+
   OWLCMD_VOID("yes", owl_command_yes, OWL_CTX_RECV,
               "Answer yes to a question",
               "yes",
@@ -2711,6 +2716,15 @@ CALLER_OWN char *owl_command_with_history(int argc, const char *const *argv, con
   hist = owl_global_get_cmd_history(&g);
   owl_history_store(hist, ptr, false);
   return owl_function_command(ptr);
+}
+
+void owl_command_clean_history(void) {
+  owl_history *hist;
+
+  hist = owl_global_get_cmd_history(&g);
+  owl_history_cleanup(hist);
+  owl_function_makemsg("History cleaned");
+  return;
 }
 
 void owl_command_yes(void)
